@@ -158,9 +158,9 @@ class Config
     public static function loadConfig()
     {
         self::$global = self::loadConfigurationFile();
-        if (isset(self::$global['skin'])) {
+        if (isset(self::$global['templaterender']['main']['skin'])) {
             $templatesFolder = BASE_PATH . Skin::SKINS_FOLDER;
-            $skinFolder = $templatesFolder . '/' . self::$global['skin'];
+            $skinFolder = $templatesFolder . '/' . self::$global['templaterender']['main']['skin'];
             if (is_dir($templatesFolder) && !is_dir($skinFolder)) {
                 Config::setError("Skin folder '$skinFolder' does not exists!");
                 //(new EditConfig())->run();
@@ -237,11 +237,13 @@ class Config
     /**
      * Gets the contents of a variable. If the variable does not exist, return null.
      *
+     * @param string $module
+     * @param string $section
      * @param string $name
      *
-     * @return string|null
+     * @return string|null ?string
      */
-    public static function getVar(string $module, string $section, string $name)// : ?string - NetBeans only supports up to php7.0, for this you need php7.1
+    public static function getVar(string $module, string $section, string $name): ?string
     {
         return self::$global[$module][$section][$name] ?? null;
     }

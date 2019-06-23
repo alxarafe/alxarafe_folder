@@ -10,8 +10,15 @@ namespace Alxarafe\Base;
  *
  * @package Alxarafe\Base
  */
-class Controller
+abstract class Controller
 {
+    /**
+     * Main is invoked if method is not specified.
+     * Check if you have to save changes or just exit
+     *
+     * @return void
+     */
+    abstract public function main();
 
     /**
      * Controller constructor.

@@ -23,7 +23,6 @@ class Dispatcher
      * @var array
      */
     public $searchDir;
-    public $nameSpaces;
 
     /**
      * Dispatcher constructor.
@@ -33,9 +32,7 @@ class Dispatcher
         $this->getConfiguration();
 
         // Search controllers in BASE_PATH/Controllers and ALXARAFE_FOLDER/Controllers
-        $this->searchDir[] = BASE_PATH;
-        $this->searchDir[] = ALXARAFE_FOLDER;
-        $this->nameSpaces[] = 'Alxarafe';
+        $this->searchDir['Alxarafe'] = ALXARAFE_FOLDER;
     }
 
     /**
@@ -52,7 +49,7 @@ class Dispatcher
             Config::loadConfig();
         } else {
             Config::setError("Creating '$configFile' file...");
-            (new EditConfig())->run();
+            (new EditConfig())->main();
             die;
         }
     }
@@ -111,10 +108,11 @@ class Dispatcher
     public function processFolder(string $path, string $call, string $method): bool
     {
         $className = $call;
-        foreach ($this->nameSpaces as $nameSpace) {
+        foreach ($this->searchDir as $nameSpace => $controllerPath) {
             $_className = $nameSpace . '\\Controllers\\' . $call;
             if (class_exists($_className)) {
                 $className = $_className;
+                Debug::addMessage('messages', "$className exists!");
             }
         }
         $controllerPath = $path . '/' . $call . '.php';

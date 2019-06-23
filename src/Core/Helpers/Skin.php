@@ -312,8 +312,6 @@ class Skin
                     $usePath[] = ALXARAFE_TEMPLATES_FOLDER;
                 }
 
-                var_dump($usePath);
-
                 Debug::addMessage('messages', 'Using:' . print_r($usePath, true));
 
                 $loader = new Twig_Loader_Filesystem($usePath);

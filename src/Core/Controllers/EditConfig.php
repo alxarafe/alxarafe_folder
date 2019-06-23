@@ -3,12 +3,14 @@
  * Alxarafe. Development of PHP applications in a flash!
  * Copyright (C) 2018 Alxarafe <info@alxarafe.com>
  */
+
 namespace Alxarafe\Controllers;
 
 use Alxarafe\Base\Controller;
 use Alxarafe\Helpers\Config;
 use Alxarafe\Helpers\Skin;
 use Alxarafe\Views\ConfigView;
+use DebugBar\DebugBarException;
 
 /**
  * Controller for editing database and skin settings
@@ -20,6 +22,8 @@ class EditConfig extends Controller
 
     /**
      * The constructor creates the view
+     *
+     * @throws \DebugBar\DebugBarException
      */
     public function __construct()
     {
