@@ -170,6 +170,11 @@ class View
         return Config::getErrors();
     }
 
+    public function getMenus()
+    {
+        return '';
+    }
+
     /**
      * Returns the necessary html code in the header of the template, to
      * display the debug bar.

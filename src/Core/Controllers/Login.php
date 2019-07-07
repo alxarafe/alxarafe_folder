@@ -54,6 +54,6 @@ class Login extends Controller
     public function logout()
     {
         Config::$user->logout();
-        header('Location: ' . BASE_URI);
+        header('Location: ' . BASE_URI . '?call=Login');
     }
 }

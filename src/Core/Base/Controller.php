@@ -3,6 +3,7 @@
  * Alxarafe. Development of PHP applications in a flash!
  * Copyright (C) 2018 Alxarafe <info@alxarafe.com>
  */
+
 namespace Alxarafe\Base;
 
 /**
@@ -12,6 +13,8 @@ namespace Alxarafe\Base;
  */
 abstract class Controller
 {
+    public $protectedClose;
+
     /**
      * Main is invoked if method is not specified.
      * Check if you have to save changes or just exit
@@ -25,6 +28,7 @@ abstract class Controller
      */
     public function __construct()
     {
+        $this->protectedClose = false;
         /*
           try {
           $this->className = (new \ReflectionClass($this))->getShortName();
