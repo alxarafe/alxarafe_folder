@@ -3,6 +3,7 @@
  * Alxarafe. Development of PHP applications in a flash!
  * Copyright (C) 2018 Alxarafe <info@alxarafe.com>
  */
+
 namespace Alxarafe\Helpers;
 
 use Alxarafe\Base\View;
@@ -33,6 +34,7 @@ class Dispatcher
 
         // Search controllers in BASE_PATH/Controllers and ALXARAFE_FOLDER/Controllers
         $this->searchDir['Alxarafe'] = ALXARAFE_FOLDER;
+        $this->searchDir['ThinCore'] = '';
     }
 
     /**
@@ -65,6 +67,11 @@ class Dispatcher
         define('APP_PROTOCOL', filter_input(INPUT_SERVER, 'REQUEST_SCHEME'));
         define('SITE_URL', APP_PROTOCOL . '://' . SERVER_NAME);
         define('BASE_URI', SITE_URL . APP_URI);
+
+        define('CALL_CONTROLLER', 'call');
+        define('METHOD_CONTROLLER', 'run');
+        define('DEFAULT_CALL_CONTROLLER', 'index');
+        define('DEFAULT_METHOD_CONTROLLER', 'main');
 
         /**
          * It is recommended to define BASE_PATH as the first line of the
@@ -100,28 +107,18 @@ class Dispatcher
      * Returns true if it locates the class and the method exists,
      * executing it.
      *
-     * @param string $path
+     * @param string $key
      * @param string $call
      * @param string $method
      * @return bool
      */
-    public function processFolder(string $path, string $call, string $method): bool
+    public function processFolder(string $key, string $call, string $method): bool
     {
-        $className = $call;
-        foreach ($this->searchDir as $nameSpace => $controllerPath) {
-            $_className = $nameSpace . '\\Controllers\\' . $call;
-            if (class_exists($_className)) {
-                $className = $_className;
-                Debug::addMessage('messages', "$className exists!");
-            }
-        }
-        $controllerPath = $path . '/' . $call . '.php';
-        if (file_exists($controllerPath)) {
-            require_once $controllerPath;
-            if (method_exists($className, $method)) {
-                (new $className())->{$method}();
-                return true;
-            }
+        $className = $key . '\\Controllers\\' . $call;
+        if (class_exists($className)) {
+            Debug::addMessage('messages', "$className exists!");
+            (new $className())->{$method}();
+            return true;
         }
         return false;
     }
@@ -135,14 +132,17 @@ class Dispatcher
      */
     public function process()
     {
-        foreach ($this->searchDir as $dir) {
-            $path = $dir . '/Controllers';
-            $call = $_GET['call'] ?? 'index';
-            $method = $_GET['run'] ?? 'main';
-            if ($this->processFolder($path, $call, $method)) {
+        foreach ($this->searchDir as $key => $dir) {
+            //$path = $dir . '/Controllers';
+            $call = $_GET[constant('CALL_CONTROLLER')] ?? constant('DEFAULT_CALL_CONTROLLER');
+            $method = $_GET[constant('METHOD_CONTROLLER')] ?? constant('DEFAULT_METHOD_CONTROLLER');
+            Debug::addMessage('messages', "process(): Comprobando '$key': {$call}->{$method}()");
+            if ($this->processFolder($key, $call, $method)) {
+                Debug::addMessage('messages', "process(): Ok");
                 return true;
             }
         }
+        Debug::addMessage('messages', 'Process fault!');
         return false;
     }
 
