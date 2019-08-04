@@ -3,6 +3,7 @@
  * Alxarafe. Development of PHP applications in a flash!
  * Copyright (C) 2018 Alxarafe <info@alxarafe.com>
  */
+
 namespace Alxarafe\Helpers;
 
 use Alxarafe\Base\View;
@@ -273,6 +274,57 @@ class Skin
         return self::renderIt($vars);
     }
 
+    private static function getPaths()
+    {
+        // Only use really existing path
+        $usePath = [];
+        if (file_exists(self::getTemplatesFolder())) {
+            $usePath[] = self::getTemplatesFolder();
+        }
+        if (file_exists(self::getCommonTemplatesFolder())) {
+            $usePath[] = self::getCommonTemplatesFolder();
+        }
+        if (file_exists(DEFAULT_TEMPLATES_FOLDER)) {
+            $usePath[] = DEFAULT_TEMPLATES_FOLDER;
+        }
+        if (file_exists(ALXARAFE_TEMPLATES_FOLDER)) {
+            $usePath[] = ALXARAFE_TEMPLATES_FOLDER;
+        }
+        return $usePath;
+    }
+
+    private static function getPathsUri()
+    {
+        // Only use really existing path
+        $usePath = [];
+        if (file_exists(self::getTemplatesFolder())) {
+            $usePath[] = array('path' => self::getTemplatesFolder(), 'uri' => self::getTemplatesUri());
+        }
+        if (file_exists(self::getCommonTemplatesFolder())) {
+            $usePath[] = array('path' => self::getCommonTemplatesFolder(), 'uri' => self::getCommonTemplatesUri());
+        }
+        if (file_exists(DEFAULT_TEMPLATES_FOLDER)) {
+            $usePath[] = array('path' => DEFAULT_TEMPLATES_FOLDER, 'uri' => DEFAULT_TEMPLATES_URI);
+        }
+        if (file_exists(ALXARAFE_TEMPLATES_FOLDER)) {
+            $usePath[] = array('path' => ALXARAFE_TEMPLATES_FOLDER, 'uri' => ALXARAFE_TEMPLATES_URI);
+        }
+        return $usePath;
+    }
+
+    public static function getResource($string)
+    {
+        foreach (self::getPathsUri() as $path) {
+            if (file_exists($path['path'] . $string)) {
+                Debug::addMessage('messages', 'Return: ' . $path['uri'] . $string);
+                return $path['uri'] . $string;
+            }
+        }
+
+        Debug::addMessage('messages', 'Not found: ' . $string);
+        return $string;
+    }
+
     /**
      * TODO: Undocumented
      *
@@ -297,20 +349,7 @@ class Skin
                     'GLOBALS' => $GLOBALS,
                 ]);
 
-                // Only use really existing path
-                $usePath = [];
-                if (file_exists(self::getTemplatesFolder())) {
-                    $usePath[] = self::getTemplatesFolder();
-                }
-                if (file_exists(self::getCommonTemplatesFolder())) {
-                    $usePath[] = self::getCommonTemplatesFolder();
-                }
-                if (file_exists(DEFAULT_TEMPLATES_FOLDER)) {
-                    $usePath[] = DEFAULT_TEMPLATES_FOLDER;
-                }
-                if (file_exists(ALXARAFE_TEMPLATES_FOLDER)) {
-                    $usePath[] = ALXARAFE_TEMPLATES_FOLDER;
-                }
+                $usePath = self::getPaths();
 
                 Debug::addMessage('messages', 'Using:' . print_r($usePath, true));
 

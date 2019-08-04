@@ -6,6 +6,8 @@
 
 namespace Alxarafe\Base;
 
+use Alxarafe\Helpers\Skin;
+
 /**
  * Class Controller
  *
@@ -38,4 +40,10 @@ abstract class Controller
           }
          */
     }
+
+    public function getResource($string)
+    {
+        return Skin::getResource($string);
+    }
+
 }
