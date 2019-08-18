@@ -41,9 +41,9 @@ class Login extends Controller
      */
     public function main()
     {
-        if (!isset(Config::$username)) {
+        //if (!isset(Config::$username)) {
             Skin::setView(new LoginView($this));
-        }
+        //}
     }
 
     /**

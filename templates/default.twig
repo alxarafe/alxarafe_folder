@@ -1,8 +1,9 @@
-{% extends "index.twig" %}
+{% extends "master/index.twig" %}
 
 {% block title %}Default template{% endblock %}
 
 {% block body %}
+    This is the default page! 404?
     <h1>{{view.title}}</h1>
     {{view.openForm({action: view.url, message: view.getErrors()}) | raw}}
     {{view.view() | raw}}
