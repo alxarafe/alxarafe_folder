@@ -15,7 +15,15 @@ use Alxarafe\Helpers\Skin;
  */
 abstract class Controller
 {
+    /**
+     * @var bool
+     */
     public $protectedClose;
+
+    /**
+     * @var mixed
+     */
+    public $action;
 
     /**
      * Main is invoked if method is not specified.
@@ -23,22 +31,51 @@ abstract class Controller
      *
      * @return void
      */
-    abstract public function main();
+    // abstract public function main();
 
     /**
      * Controller constructor.
      */
     public function __construct()
     {
+    }
+
+    public function main()
+    {
+        $this->pre_load();
+        $this->do_action();
+    }
+
+    public function pre_load()
+    {
         $this->protectedClose = false;
-        /*
-          try {
-          $this->className = (new \ReflectionClass($this))->getShortName();
-          } catch (\ReflectionException $e) {
-          //echo $e->getCode() . ': ' . $e->getMessage();
-          $this->className = 'Class name not available';
-          }
-         */
+        $this->action = filter_input(INPUT_POST, 'action', FILTER_DEFAULT);
+    }
+
+    public function do_action()
+    {
+        if (!isset($this->action)) {
+            return;
+        }
+
+        switch ($this->action) {
+            case 'save':
+                $this->do_save();
+                break;
+            case 'exit':
+                $this->do_exit();
+            default:
+                trigger_error("The '{$this->action}' action has not been defined!");
+        }
+    }
+
+    public function do_save()
+    {
+    }
+
+    public function do_exit()
+    {
+        header('Location: ' . BASE_URI);
     }
 
     public function getResource($string)

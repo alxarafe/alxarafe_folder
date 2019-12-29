@@ -136,9 +136,9 @@ class Dispatcher
             //$path = $dir . '/Controllers';
             $call = $_GET[constant('CALL_CONTROLLER')] ?? constant('DEFAULT_CALL_CONTROLLER');
             $method = $_GET[constant('METHOD_CONTROLLER')] ?? constant('DEFAULT_METHOD_CONTROLLER');
-            Debug::addMessage('messages', "process(): Comprobando '$key': {$call}->{$method}()");
+            Debug::addMessage('messages', "Dispatcher::process() trying for '$key': {$call}->{$method}()");
             if ($this->processFolder($key, $call, $method)) {
-                Debug::addMessage('messages', "process(): Ok");
+                Debug::addMessage('messages', "Dispatcher::process(): Ok");
                 return true;
             }
         }
@@ -157,8 +157,9 @@ class Dispatcher
     public function run()
     {
         if (!$this->process()) {
+            // Execute '404 page not found'
             if (Skin::$view == null) {
-                $view = new View();
+                Skin::$view = new View();
             }
         }
     }
